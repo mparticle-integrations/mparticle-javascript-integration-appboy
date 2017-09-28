@@ -680,4 +680,20 @@ describe('Appboy Forwarder', function () {
 
         window.appboy.baseUrl.should.equal('https://sdk.iad-03.appboy.com');
     });
+
+    it('should use the 03 cluster url when passed an invalid cluster', function(){
+        reportService.reset();
+        window.appboy = new MockAppboy();
+        mParticle.forwarder.init({
+            apiKey: '123456',
+            cluster: '04'
+        }, reportService.cb, true, null, {
+            gender: 'm'
+        }, [{
+            Identity: 'testUser',
+            Type: IdentityType.CustomerId
+        }], '1.1', 'My App');
+
+        window.appboy.baseUrl.should.equal('https://sdk.iad-03.appboy.com');
+    });
 });

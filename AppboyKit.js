@@ -234,7 +234,11 @@
                 options.enableHtmlInAppMessages = forwarderSettings.enableHtmlInAppMessages == 'True';
 
                 if (forwarderSettings.cluster) {
-                    options.baseUrl = clusterMapping[forwarderSettings.cluster];
+                    if (clusterMapping[forwarderSettings.cluster]) {
+                        options.baseUrl = clusterMapping[forwarderSettings.cluster];
+                    } else {
+                        options.baseUrl = clusterMapping['03'];
+                    }
                 } else if (forwarderSettings.dataCenterLocation) {
                     if (forwarderSettings.dataCenterLocation === 'EU') {
                         options.baseUrl = clusterMapping.EU;
