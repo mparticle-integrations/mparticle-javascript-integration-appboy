@@ -644,7 +644,7 @@ describe('Appboy Forwarder', function () {
             Type: IdentityType.CustomerId
         }], '1.1', 'My App');
 
-        window.appboy.baseUrl.should.equal('https://dev.appboy.com');
+        window.appboy.baseUrl.should.equal('https://dev.appboy.com/api/v3');
     });
 
     it('should use the 02 clusterMapping url when 02 number is passed to cluster', function(){
@@ -661,7 +661,7 @@ describe('Appboy Forwarder', function () {
             Type: IdentityType.CustomerId
         }], '1.1', 'My App');
 
-        window.appboy.baseUrl.should.equal('https://sdk-02.iad.appboy.com');
+        window.appboy.baseUrl.should.equal('https://sdk-02.iad.appboy.com/api/v3');
     });
 
     it('should use the 03 clusterMapping url when 03 number is passed to cluster', function(){
@@ -678,7 +678,7 @@ describe('Appboy Forwarder', function () {
             Type: IdentityType.CustomerId
         }], '1.1', 'My App');
 
-        window.appboy.baseUrl.should.equal('https://sdk.iad-03.appboy.com');
+        window.appboy.baseUrl.should.equal('https://sdk.iad-03.appboy.com/api/v3');
     });
 
     it('should use the 03 cluster url when passed an invalid cluster', function(){
@@ -694,6 +694,6 @@ describe('Appboy Forwarder', function () {
             Type: IdentityType.CustomerId
         }], '1.1', 'My App');
 
-        window.appboy.baseUrl.should.equal('https://sdk.iad-03.appboy.com');
+        window.appboy.baseUrl.should.equal('https://sdk.iad-03.appboy.com/api/v3');
     });
 });

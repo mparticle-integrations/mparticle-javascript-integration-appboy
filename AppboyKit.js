@@ -22,9 +22,9 @@
         };
 
     var clusterMapping = {
-        '01': 'https://dev.appboy.com',
-        '02': 'https://sdk-02.iad.appboy.com',
-        '03': 'https://sdk.iad-03.appboy.com',
+        '01': 'https://dev.appboy.com/api/v3',
+        '02': 'https://sdk-02.iad.appboy.com/api/v3',
+        '03': 'https://sdk.iad-03.appboy.com/api/v3',
         EU: 'https://sdk.api.appboy.eu/api/v3'
     };
 
