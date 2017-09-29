@@ -233,21 +233,11 @@
                 options.sdkFlavor = 'mparticle';
                 options.enableHtmlInAppMessages = forwarderSettings.enableHtmlInAppMessages == 'True';
 
-                if (forwarderSettings.cluster) {
-                    if (clusterMapping[forwarderSettings.cluster]) {
-                        options.baseUrl = clusterMapping[forwarderSettings.cluster];
-                    } else {
-                        options.baseUrl = clusterMapping['03'];
-                    }
-                } else if (forwarderSettings.dataCenterLocation) {
-                    if (forwarderSettings.dataCenterLocation === 'EU') {
-                        options.baseUrl = clusterMapping.EU;
-                    }
+                cluster = forwarderSettings.cluster || forwarderSettings.dataCenterLocation;
+                if (clusterMapping.hasOwnProperty(cluster)) {
+                    options.baseUrl = clusterMapping[cluster];
                 }
 
-                if (forwarderSettings.dataCenterLocation === 'EU') {
-                    options.baseUrl = 'https://sdk.api.appboy.eu/api/v3';
-                }
                 if (testMode !== true) {
                     /* eslint-disable */
                     +function() {
