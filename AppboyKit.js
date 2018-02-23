@@ -32,9 +32,7 @@
         var self = this,
             forwarderSettings,
             options = {},
-            reportingService,
-            isInitialized = false,
-            eventQueue = [];
+            reportingService;
 
         self.name = name;
 
@@ -134,92 +132,71 @@
         function processEvent(event) {
             var reportEvent = false;
 
-            if (isInitialized) {
-                if (event.EventDataType == MessageType.Commerce && event.EventCategory == mParticle.CommerceEventType.ProductPurchase) {
-                    reportEvent = logPurchaseEvent(event);
-                    if (reportEvent && reportingService) {
-                        reportingService(self, event);
-                    }
-                    return;
+            if (event.EventDataType == MessageType.Commerce && event.EventCategory == mParticle.CommerceEventType.ProductPurchase) {
+                reportEvent = logPurchaseEvent(event);
+                if (reportEvent && reportingService) {
+                    reportingService(self, event);
                 }
-                if (event.EventDataType == MessageType.Commerce) {
-                    var listOfPageEvents = mParticle.eCommerce.expandCommerceEvent(event);
-                    if (listOfPageEvents != null) {
-                        for (var i = 0; i < listOfPageEvents.length; i++) {
-                            try {
-                                logAppboyEvent(listOfPageEvents[i]);
-                            }
-                            catch (err) {
-                                return 'Error logging page event' + err.message;
-                            }
+                return;
+            }
+            if (event.EventDataType == MessageType.Commerce) {
+                var listOfPageEvents = mParticle.eCommerce.expandCommerceEvent(event);
+                if (listOfPageEvents != null) {
+                    for (var i = 0; i < listOfPageEvents.length; i++) {
+                        try {
+                            logAppboyEvent(listOfPageEvents[i]);
+                        }
+                        catch (err) {
+                            return 'Error logging page event' + err.message;
                         }
                     }
-                } else if (event.EventDataType == MessageType.PageEvent) {
-                    logAppboyEvent(event);
-                } else if (event.EventDataType == MessageType.PageView) {
-                    if (forwarderSettings.forwardScreenViews == 'True') {
-                        logAppboyPageViewEvent(event);
-                    }
                 }
-                else
-                {
-                    return 'Can\'t send event type to forwarder ' + name + ', event type is not supported';
+            } else if (event.EventDataType == MessageType.PageEvent) {
+                logAppboyEvent(event);
+            } else if (event.EventDataType == MessageType.PageView) {
+                if (forwarderSettings.forwardScreenViews == 'True') {
+                    logAppboyPageViewEvent(event);
                 }
             }
-            else {
-                eventQueue.push(event);
-                return 'Can\'t send to forwarder ' + name + ', not initialized. Event added to queue.';
+            else
+            {
+                return 'Can\'t send event type to forwarder ' + name + ', event type is not supported';
             }
         }
 
         function removeUserAttribute(key) {
-            if (isInitialized) {
-                if (!(key in DefaultAttributeMethods)) {
-                    var sanitizedKey = getSanitizedValueForAppboy(key);
-                    appboy.getUser().setCustomUserAttribute(sanitizedKey, null);
-                }
-                else {
-                    return setDefaultAttribute(key, null);
-                }
+            if (!(key in DefaultAttributeMethods)) {
+                var sanitizedKey = getSanitizedValueForAppboy(key);
+                appboy.getUser().setCustomUserAttribute(sanitizedKey, null);
             }
             else {
-                return 'Can\'t call removeUserAttribute on forwarder ' + name + ', not initialized';
+                return setDefaultAttribute(key, null);
             }
         }
 
         function setUserAttribute(key, value) {
-            if (isInitialized) {
-                if (!(key in DefaultAttributeMethods)) {
-                    var sanitizedKey = getSanitizedValueForAppboy(key);
-                    var sanitizedValue = getSanitizedValueForAppboy(value);
-                    if (value != null && sanitizedValue == null) {
-                        return 'Value did not pass validation for ' + key;
-                    }
-                    appboy.getUser().setCustomUserAttribute(sanitizedKey, sanitizedValue);
+            if (!(key in DefaultAttributeMethods)) {
+                var sanitizedKey = getSanitizedValueForAppboy(key);
+                var sanitizedValue = getSanitizedValueForAppboy(value);
+                if (value != null && sanitizedValue == null) {
+                    return 'Value did not pass validation for ' + key;
                 }
-                else {
-                    return setDefaultAttribute(key, value);
-                }
+                appboy.getUser().setCustomUserAttribute(sanitizedKey, sanitizedValue);
             }
             else {
-                return 'Can\'t call setUserAttribute on forwarder ' + name + ', not initialized';
+                return setDefaultAttribute(key, value);
             }
         }
 
         function setUserIdentity(id, type) {
-            if (isInitialized) {
-                if (type == window.mParticle.IdentityType.CustomerId) {
-                    appboy.changeUser(id);
-                }
-                else if (type == window.mParticle.IdentityType.Email) {
-                    appboy.getUser().setEmail(id);
-                }
-                else {
-                    return 'Can\'t call setUserIdentity on forwarder ' + name + ', identity type not supported.';
-                }
+            if (type == window.mParticle.IdentityType.CustomerId) {
+                appboy.changeUser(id);
+            }
+            else if (type == window.mParticle.IdentityType.Email) {
+                appboy.getUser().setEmail(id);
             }
             else {
-                return 'Can\'t call setUserIdentity on forwarder ' + name + ', not initialized';
+                return 'Can\'t call setUserIdentity on forwarder ' + name + ', identity type not supported.';
             }
         }
 
@@ -263,37 +240,20 @@
 
                             (y = p.createElement(P)).type = 'text/javascript';
                             y.src = 'https://js.appboycdn.com/web-sdk/2.0/appboy.min.js';
+
                             y.async = 1;
                             (b = p.getElementsByTagName(P)[0]).parentNode.insertBefore(y, b)
-                            if (y.addEventListener) {
-                              y.addEventListener("load", onLoad, false);
-                            } else if (y.readyState) {
-                              y.onreadystatechange = onLoad;
-                            }
                         }(window, document, 'script');
 
-                        function onLoad() {
-                            if (!(appboy.initialize(forwarderSettings.apiKey, options))) {
-                                return 'Failed to initialize: ' + name;
-                            }
-                            if (forwarderSettings.register_inapp == 'True') {
-                                appboy.display.automaticallyShowNewInAppMessages();
-                            }
-
-                            appboy.openSession();
-                            appboy.requestInAppMessageRefresh();
-
-                            isInitialized = true;
-
-                            if (eventQueue && eventQueue.length > 0) {
-                                // Process any events that may have been queued up while forwarder was being initialized.
-                                for(var i = 0; i < eventQueue.length; i++) {
-                                    processEvent(eventQueue[i]);
-                                }
-
-                                eventQueue = [];
-                            }
+                        if (!(appboy.initialize(forwarderSettings.apiKey, options))) {
+                            return 'Failed to initialize: ' + name;
                         }
+                        if (forwarderSettings.register_inapp == 'True') {
+                            appboy.display.automaticallyShowNewInAppMessages();
+                        }
+
+                        appboy.openSession();
+                        appboy.requestInAppMessageRefresh();
                     }();
                     /* eslint-enable */
                 }
@@ -307,7 +267,6 @@
 
                     appboy.openSession();
                     appboy.requestInAppMessageRefresh();
-                    isInitialized = true;
                 }
                 return 'Successfully initialized: ' + name;
             }
