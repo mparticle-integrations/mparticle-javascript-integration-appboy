@@ -245,9 +245,8 @@
                             (b = p.getElementsByTagName(P)[0]).parentNode.insertBefore(y, b)
                         }(window, document, 'script');
 
-                        if (!(appboy.initialize(forwarderSettings.apiKey, options))) {
-                            return 'Failed to initialize: ' + name;
-                        }
+                        appboy.initialize(forwarderSettings.apiKey, options);
+
                         if (forwarderSettings.register_inapp == 'True') {
                             appboy.display.automaticallyShowNewInAppMessages();
                         }
