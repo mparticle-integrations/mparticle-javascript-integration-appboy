@@ -729,12 +729,12 @@ describe('Appboy Forwarder', function () {
     });
 
     it('decodeClusterSetting should return null on bad json', function(){
-        Should(window.mParticle.forwarder.decodeClusterSetting("blah&quote;")).not.be.ok();
+        Should(window.mParticle.forwarder.decodeClusterSetting('blah&quote;')).not.be.ok();
     });
 
     it('decodeClusterSetting should return JS url when proper setting is given', function(){
-        var clusterSetting = "{&quot;SDK&quot;:&quot;sdk.foo.bar.com&quot;,&quot;REST&quot;:&quot;rest.foo.bar.com&quot;,&quot;JS&quot;:&quot;js.foo.bar.com&quot;}";
-        Should(window.mParticle.forwarder.decodeClusterSetting(clusterSetting)).equal('https://js.foo.bar.com/api/v3')
+        var clusterSetting = '{&quot;SDK&quot;:&quot;sdk.foo.bar.com&quot;,&quot;REST&quot;:&quot;rest.foo.bar.com&quot;,&quot;JS&quot;:&quot;js.foo.bar.com&quot;}';
+        Should(window.mParticle.forwarder.decodeClusterSetting(clusterSetting)).equal('https://js.foo.bar.com/api/v3');
     });
 
 });
