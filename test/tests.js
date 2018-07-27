@@ -153,6 +153,7 @@ describe('Appboy Forwarder', function () {
             this.initializeCalled = false;
             this.openSessionCalled = false;
             this.inAppMessageRefreshCalled = false;
+            this.subscribeToNewInAppMessagesCalled = false;
 
             this.logCustomEventName = null;
             this.logPurchaseName = null;
@@ -173,8 +174,9 @@ describe('Appboy Forwarder', function () {
                 return true;
             };
 
-            this.openSession = function (){
+            this.openSession = function(func) {
                 self.openSessionCalled = true;
+                func();
             };
 
             this.requestInAppMessageRefresh = function (){
@@ -183,6 +185,10 @@ describe('Appboy Forwarder', function () {
 
             this.changeUser = function(id){
                 self.userId = id;
+            };
+
+            this.subscribeToNewInAppMessages = function(){
+                self.subscribeToNewInAppMessagesCalled = true;
             };
 
             this.getUser = function(){
@@ -257,24 +263,8 @@ describe('Appboy Forwarder', function () {
         window.appboy.should.have.property('initializeCalled', true);
         window.appboy.should.have.property('openSessionCalled', true);
         window.appboy.should.have.property('inAppMessageRefreshCalled', true);
+        window.appboy.should.have.property('subscribeToNewInAppMessagesCalled', true);
         window.appboy.display.should.have.property('automaticallyShowNewInAppMessagesCalled', false);
-    });
-
-    it('should automatically show in app messages', function(){
-        reportService.reset();
-        window.appboy = new MockAppboy();
-
-        mParticle.forwarder.init({
-            apiKey: '123456',
-            register_inapp: 'True'
-        }, reportService.cb, true, null, {
-            gender: 'm'
-        }, [{
-            Identity: 'testUser',
-            Type: IdentityType.CustomerId
-        }], '1.1', 'My App');
-
-        window.appboy.display.should.have.property('automaticallyShowNewInAppMessagesCalled', true);
     });
 
     it('should log event', function() {
@@ -737,4 +727,22 @@ describe('Appboy Forwarder', function () {
         Should(window.mParticle.forwarder.decodeClusterSetting(clusterSetting)).equal('https://js.foo.bar.com/api/v3');
     });
 
+    it('does not log prime-for-push when initialized without safariWebsitePushId', function() {
+        Should(window.appboy.logCustomEventName).not.be.ok();
+    });
+
+    it('logs prime-for-push when initialized with safariWebsitePushId', function() {
+        mParticle.forwarder.init({
+            apiKey: '123456',
+            safariWebsitePushId: 'test'
+        }, reportService.cb, true, null, {
+            gender: 'm'
+        }, [{
+            Identity: 'testUser',
+            Type: IdentityType.CustomerId
+        }], '1.1', 'My App');
+
+        window.appboy.logCustomEventCalled.should.equal(true);
+        window.appboy.logCustomEventName.should.equal('prime-for-push');
+    });
 });
