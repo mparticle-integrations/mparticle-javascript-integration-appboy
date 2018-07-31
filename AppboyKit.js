@@ -242,14 +242,6 @@
             });
         }
 
-        function openSession() {
-            appboy.openSession(function() {
-                if (forwarderSettings.safariWebsitePushId) {
-                    appboy.logCustomEvent('prime-for-push');
-                }
-            });
-        }
-
         function initForwarder(settings, service, testMode, trackerId, userAttributes, userIdentities, appVersion, appName) {  // eslint-disable-line no-unused-vars
             try {
                 forwarderSettings = settings;
@@ -295,7 +287,7 @@
                     appboy.initialize(forwarderSettings.apiKey, options);
 
                     primeAppBoyWebPush();
-                    openSession();
+                    appboy.openSession();
 
                     appboy.requestInAppMessageRefresh();
                     /* eslint-enable */
@@ -306,7 +298,7 @@
                     }
 
                     primeAppBoyWebPush();
-                    openSession();
+                    appboy.openSession();
 
                     appboy.requestInAppMessageRefresh();
                 }
