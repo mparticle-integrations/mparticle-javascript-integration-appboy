@@ -203,13 +203,9 @@
         function primeAppBoyWebPush() {
             appboy.subscribeToNewInAppMessages(function(inAppMessages) {
                 var message = inAppMessages[0];
+                var pushPrimer = false;
                 if (message != null) {
-                    var shouldDisplay;
-                    if (forwarderSettings.register_inapp == 'True') {
-                        shouldDisplay = true;
-                    } else {
-                        shouldDisplay = false;
-                    }
+                    shouldDisplay = true;
 
                     if (message instanceof appboy.ab.InAppMessage) {
                       // Read the key-value pair for msg-id
@@ -217,6 +213,7 @@
 
                       // If this is our push primer message
                         if (msgId == 'push-primer') {
+                            pushPrimer = true;
                           // We don't want to display the soft push prompt to users on browsers that don't support push, or if the user
                           // has already granted/blocked permission
                             if (!appboy.isPushSupported() || appboy.isPushPermissionGranted() || appboy.isPushBlocked()) {
@@ -231,8 +228,8 @@
                         }
                     }
 
-                  // Display the message
-                    if (shouldDisplay) {
+                    // Display the message if it's a push primer message and shouldDisplay is true
+                    if ((pushPrimer && shouldDisplay) || (!pushPrimer && forwarderSettings.register_inapp === 'True')) {
                         appboy.display.showInAppMessage(message);
                     }
                 }
@@ -251,9 +248,14 @@
                 options.sessionTimeoutInSeconds = forwarderSettings.ABKSessionTimeoutKey || 1800;
                 options.sdkFlavor = 'mparticle';
                 options.enableHtmlInAppMessages = forwarderSettings.enableHtmlInAppMessages == 'True';
+                options.enableLogging = true;
 
                 if (forwarderSettings.safariWebsitePushId) {
                     options.safariWebsitePushId = forwarderSettings.safariWebsitePushId;
+                }
+
+                if (forwarderSettings.serviceWorkerLocation) {
+                    options.serviceWorkerLocation = forwarderSettings.serviceWorkerLocation;
                 }
 
                 var cluster = forwarderSettings.cluster || forwarderSettings.dataCenterLocation;
@@ -299,7 +301,6 @@
 
                     primeAppBoyWebPush();
                     appboy.openSession();
-
                     appboy.requestInAppMessageRefresh();
                 }
                 return 'Successfully initialized: ' + name;

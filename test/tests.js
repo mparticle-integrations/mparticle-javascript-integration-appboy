@@ -174,9 +174,8 @@ describe('Appboy Forwarder', function () {
                 return true;
             };
 
-            this.openSession = function(func) {
+            this.openSession = function() {
                 self.openSessionCalled = true;
-                func();
             };
 
             this.requestInAppMessageRefresh = function (){
@@ -725,24 +724,5 @@ describe('Appboy Forwarder', function () {
     it('decodeClusterSetting should return JS url when proper setting is given', function(){
         var clusterSetting = '{&quot;SDK&quot;:&quot;sdk.foo.bar.com&quot;,&quot;REST&quot;:&quot;rest.foo.bar.com&quot;,&quot;JS&quot;:&quot;js.foo.bar.com&quot;}';
         Should(window.mParticle.forwarder.decodeClusterSetting(clusterSetting)).equal('https://js.foo.bar.com/api/v3');
-    });
-
-    it('does not log prime-for-push when initialized without safariWebsitePushId', function() {
-        Should(window.appboy.logCustomEventName).not.be.ok();
-    });
-
-    it('logs prime-for-push when initialized with safariWebsitePushId', function() {
-        mParticle.forwarder.init({
-            apiKey: '123456',
-            safariWebsitePushId: 'test'
-        }, reportService.cb, true, null, {
-            gender: 'm'
-        }, [{
-            Identity: 'testUser',
-            Type: IdentityType.CustomerId
-        }], '1.1', 'My App');
-
-        window.appboy.logCustomEventCalled.should.equal(true);
-        window.appboy.logCustomEventName.should.equal('prime-for-push');
     });
 });
