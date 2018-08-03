@@ -239,6 +239,14 @@
             });
         }
 
+        function openSession(forwarderSettings) {
+            appboy.openSession(function() {
+                if (forwarderSettings.softPushCustomEventName) {
+                    appboy.logCustomEvent(forwarderSettings.softPushCustomEventName);
+                }
+            });
+        }
+
         function initForwarder(settings, service, testMode, trackerId, userAttributes, userIdentities, appVersion, appName) {  // eslint-disable-line no-unused-vars
             try {
                 forwarderSettings = settings;
@@ -248,7 +256,6 @@
                 options.sessionTimeoutInSeconds = forwarderSettings.ABKSessionTimeoutKey || 1800;
                 options.sdkFlavor = 'mparticle';
                 options.enableHtmlInAppMessages = forwarderSettings.enableHtmlInAppMessages == 'True';
-                options.enableLogging = true;
 
                 if (forwarderSettings.safariWebsitePushId) {
                     options.safariWebsitePushId = forwarderSettings.safariWebsitePushId;
@@ -289,9 +296,8 @@
                     appboy.initialize(forwarderSettings.apiKey, options);
 
                     primeAppBoyWebPush();
-                    appboy.openSession();
+                    openSession(forwarderSettings);
 
-                    appboy.requestInAppMessageRefresh();
                     /* eslint-enable */
                 }
                 else {
@@ -300,8 +306,7 @@
                     }
 
                     primeAppBoyWebPush();
-                    appboy.openSession();
-                    appboy.requestInAppMessageRefresh();
+                    openSession(forwarderSettings);
                 }
                 return 'Successfully initialized: ' + name;
             }
