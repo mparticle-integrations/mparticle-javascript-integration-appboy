@@ -2,6 +2,9 @@
   "name": "integration-appboy",
   "description": "mParticle integration sdk for Appboy",
   "repository": "https://github.com/mParticle/integration-appboy",
+  "scripts": {
+    "build": "cat src/appboy-v2.0.9.min.js src/AppboyKit-dev.js > AppboyKit.js"
+  },
   "devDependencies": {
     "blanket": "1.1.7",
     "should": "7.1.0",
