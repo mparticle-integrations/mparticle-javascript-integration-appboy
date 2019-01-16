@@ -334,7 +334,8 @@ window.appboy = require('appboy-web-sdk');
 
             sanitizedEventName = getSanitizedValueForAppboy(window.location.pathname);
             sanitizedAttrs = getSanitizedCustomProperties(attrs);
-            appboy.logCustomEvent(sanitizedEventName, sanitizedAttrs);
+            var result = appboy.logCustomEvent(sanitizedEventName, sanitizedAttrs);
+            return result;
         }
 
         function setDefaultAttribute(key, value) {
@@ -372,9 +373,7 @@ window.appboy = require('appboy-web-sdk');
             }
 
             var reportEvent = appboy.logCustomEvent(sanitizedEventName, sanitizedProperties);
-            if (reportEvent && reportingService) {
-                reportingService(self, event);
-            }
+            return reportEvent;
         }
 
         /**************************/
@@ -385,12 +384,7 @@ window.appboy = require('appboy-web-sdk');
 
             if (event.EventDataType == MessageType.Commerce && event.EventCategory == mParticle.CommerceEventType.ProductPurchase) {
                 reportEvent = logPurchaseEvent(event);
-                if (reportEvent && reportingService) {
-                    reportingService(self, event);
-                }
-                return;
-            }
-            if (event.EventDataType == MessageType.Commerce) {
+            } else if (event.EventDataType == MessageType.Commerce) {
                 var listOfPageEvents = mParticle.eCommerce.expandCommerceEvent(event);
                 if (listOfPageEvents != null) {
                     for (var i = 0; i < listOfPageEvents.length; i++) {
@@ -402,16 +396,20 @@ window.appboy = require('appboy-web-sdk');
                         }
                     }
                 }
+                reportEvent = true;
             } else if (event.EventDataType == MessageType.PageEvent) {
-                logAppboyEvent(event);
+                reportEvent = logAppboyEvent(event);
             } else if (event.EventDataType == MessageType.PageView) {
                 if (forwarderSettings.forwardScreenViews == 'True') {
-                    logAppboyPageViewEvent(event);
+                    reportEvent = logAppboyPageViewEvent(event);
                 }
             }
-            else
-            {
+            else {
                 return 'Can\'t send event type to forwarder ' + name + ', event type is not supported';
+            }
+
+            if (reportEvent && reportingService) {
+                reportingService(self, event);
             }
         }
 
