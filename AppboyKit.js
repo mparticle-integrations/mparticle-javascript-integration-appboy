@@ -316,12 +316,10 @@ window.appboy = require('appboy-web-sdk');
                         return 'Properties did not pass validation for ' + sanitizedProductName;
                     }
 
-                    if (appboy.logPurchase(sanitizedProductName, parseFloat(product.Price), event.CurrencyCode, product.Quantity, sanitizedProperties)) {
-                        reportEvent = true;
-                    }
+                    reportEvent = appboy.logPurchase(sanitizedProductName, parseFloat(product.Price), event.CurrencyCode, product.Quantity, sanitizedProperties);
                 });
             }
-            return reportEvent;
+            return reportEvent === true;
         }
 
         function logAppboyPageViewEvent(event) {
@@ -334,8 +332,8 @@ window.appboy = require('appboy-web-sdk');
 
             sanitizedEventName = getSanitizedValueForAppboy(window.location.pathname);
             sanitizedAttrs = getSanitizedCustomProperties(attrs);
-            var result = appboy.logCustomEvent(sanitizedEventName, sanitizedAttrs);
-            return result;
+            var reportEvent = appboy.logCustomEvent(sanitizedEventName, sanitizedAttrs);
+            return reportEvent === true;
         }
 
         function setDefaultAttribute(key, value) {
@@ -373,7 +371,7 @@ window.appboy = require('appboy-web-sdk');
             }
 
             var reportEvent = appboy.logCustomEvent(sanitizedEventName, sanitizedProperties);
-            return reportEvent;
+            return reportEvent === true;
         }
 
         /**************************/
@@ -389,14 +387,13 @@ window.appboy = require('appboy-web-sdk');
                 if (listOfPageEvents != null) {
                     for (var i = 0; i < listOfPageEvents.length; i++) {
                         try {
-                            logAppboyEvent(listOfPageEvents[i]);
+                            reportEvent = logAppboyEvent(listOfPageEvents[i]);
                         }
                         catch (err) {
                             return 'Error logging page event' + err.message;
                         }
                     }
                 }
-                reportEvent = true;
             } else if (event.EventDataType == MessageType.PageEvent) {
                 reportEvent = logAppboyEvent(event);
             } else if (event.EventDataType == MessageType.PageView) {
