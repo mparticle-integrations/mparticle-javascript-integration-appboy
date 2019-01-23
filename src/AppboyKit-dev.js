@@ -136,13 +136,19 @@ window.appboy = require('appboy-web-sdk');
                 var listOfPageEvents = mParticle.eCommerce.expandCommerceEvent(event);
                 if (listOfPageEvents != null) {
                     for (var i = 0; i < listOfPageEvents.length; i++) {
+                        // finalLoopResult keeps track of if any logAppBoyEvent in this loop returns true or not
+                        var finalLoopResult = false;
                         try {
                             reportEvent = logAppboyEvent(listOfPageEvents[i]);
+                            if (reportEvent === true) {
+                                finalLoopResult = true;
+                            }
                         }
                         catch (err) {
                             return 'Error logging page event' + err.message;
                         }
                     }
+                    reportEvent = finalLoopResult === true;
                 }
             } else if (event.EventDataType == MessageType.PageEvent) {
                 reportEvent = logAppboyEvent(event);
@@ -155,7 +161,7 @@ window.appboy = require('appboy-web-sdk');
                 return 'Can\'t send event type to forwarder ' + name + ', event type is not supported';
             }
 
-            if (reportEvent && reportingService) {
+            if (reportEvent === true && reportingService) {
                 reportingService(self, event);
             }
         }
