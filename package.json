@@ -1,7 +1,9 @@
 {
-  "name": "integration-appboy",
+  "name": "@mparticle/web-appboy-kit",
+  "version": "2.0.0-rc1",
+  "author": "mParticle Developers <developers@mparticle.com> (https://www.mparticle.com)",
   "description": "mParticle integration sdk for Appboy",
-  "repository": "https://github.com/mParticle/integration-appboy",
+  "repository": "https://github.com/mparticle-integrations/mparticle-javascript-integration-appboy",
   "devDependencies": {
     "blanket": "1.1.7",
     "mocha": "2.3.2",
@@ -9,9 +11,11 @@
     "watchify": "^3.11.0"
   },
   "dependencies": {
+    "@mparticle/web-sdk": "^2.0.0",
     "appboy-web-sdk": "2.2.4"
   },
   "scripts": {
     "watch": "watchify src/AppboyKit-dev.js -v -o AppboyKit.js"
-  }
+  },
+  "license": "Apache-2.0"
 }
