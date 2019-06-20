@@ -17,6 +17,7 @@
     "appboy-web-sdk": "2.2.4"
   },
   "scripts": {
-    "watch": "watchify src/AppboyKit-dev.js -v -o AppboyKit.js"
+    "build": "rollup --config rollup.config.js",
+    "watch": "rollup --config rollup.config.js -w"
   }
 }
