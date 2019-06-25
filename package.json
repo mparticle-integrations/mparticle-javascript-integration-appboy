@@ -3,7 +3,10 @@
   "version": "2.0.0-rc1",
   "author": "mParticle Developers <developers@mparticle.com> (https://www.mparticle.com)",
   "description": "mParticle integration sdk for Appboy",
-  "browser": "AppboyKit.js",
+  "browser": "dist/AppboyKit.js",
+  "files": [
+    "dist/AppboyKit.js"
+  ],
   "repository": "https://github.com/mparticle-integrations/mparticle-javascript-integration-appboy",
   "devDependencies": {
     "blanket": "1.1.7",
@@ -15,7 +18,7 @@
     "rollup-plugin-node-resolve": "^5.0.1"
   },
   "dependencies": {
-    "@mparticle/web-sdk": "^2.0.0",
+    "@mparticle/web-sdk": "^2.9.4-rc.1",
     "appboy-web-sdk": "2.2.4"
   },
   "scripts": {
