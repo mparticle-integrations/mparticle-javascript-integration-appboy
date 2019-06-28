@@ -1,15 +1,14 @@
-(function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
-	typeof define === 'function' && define.amd ? define(['exports'], factory) :
-	(global = global || self, factory(global['mp-appboy-kit'] = {}));
-}(this, function (exports) { 'use strict';
-
+var mpAppboyKit = (function (exports) {
 	function commonjsRequire () {
 		throw new Error('Dynamic requires are not currently supported by rollup-plugin-commonjs');
 	}
 
 	function createCommonjsModule(fn, module) {
 		return module = { exports: {} }, fn(module, module.exports), module.exports;
+	}
+
+	function getCjsExportFromNamespace (n) {
+		return n && n['default'] || n;
 	}
 
 	var appboy_min = createCommonjsModule(function (module, exports) {
@@ -262,9 +261,26 @@
 	aa=T=null!=ca?ca.apply():new T.constructor;else T=T[R[U]];ba+="."+R[U];}null!=T&&"function"===typeof T&&T.apply(aa,O[P]);}}}}).call(window);
 	});
 
-	var AppboyKitDev = createCommonjsModule(function (module) {
+	/*!
+	 * isobject <https://github.com/jonschlinkert/isobject>
+	 *
+	 * Copyright (c) 2014-2017, Jon Schlinkert.
+	 * Released under the MIT License.
+	 */
+
+	function isObject(val) {
+	  return val != null && typeof val === 'object' && Array.isArray(val) === false;
+	}
+
+	var isobject = /*#__PURE__*/Object.freeze({
+		'default': isObject
+	});
+
+	var isobject$1 = getCjsExportFromNamespace(isobject);
+
 	/* eslint-disable no-undef */
 	window.appboy = appboy_min;
+
 	//  Copyright 2015 mParticle, Inc.
 	//
 	//  Licensed under the Apache License, Version 2.0 (the "License");
@@ -279,7 +295,6 @@
 	//  See the License for the specific language governing permissions and
 	//  limitations under the License.
 
-	(function (window) {
 	    var name = 'Appboy',
 	        moduleId = 28,
 	        MessageType = {
@@ -476,19 +491,19 @@
 	                    shouldDisplay = true;
 
 	                    if (message instanceof appboy.ab.InAppMessage) {
-	                      // Read the key-value pair for msg-id
+	                        // Read the key-value pair for msg-id
 	                        var msgId = message.extras['msg-id'];
 
-	                      // If this is our push primer message
+	                        // If this is our push primer message
 	                        if (msgId == 'push-primer') {
 	                            pushPrimer = true;
-	                          // We don't want to display the soft push prompt to users on browsers that don't support push, or if the user
-	                          // has already granted/blocked permission
+	                            // We don't want to display the soft push prompt to users on browsers that don't support push, or if the user
+	                            // has already granted/blocked permission
 	                            if (!appboy.isPushSupported() || appboy.isPushPermissionGranted() || appboy.isPushBlocked()) {
 	                                shouldDisplay = false;
 	                            }
 	                            if (message.buttons[0] != null) {
-	                              // Prompt the user when the first button is clicked
+	                                // Prompt the user when the first button is clicked
 	                                message.buttons[0].subscribeToClickedEvent(function() {
 	                                    appboy.registerAppboyPushMessages();
 	                                });
@@ -502,7 +517,7 @@
 	                    }
 	                }
 
-	              // Remove this message from the array of IAMs and return whatever's left
+	                // Remove this message from the array of IAMs and return whatever's left
 	                return inAppMessages.slice(1);
 	            });
 	        }
@@ -651,33 +666,45 @@
 	    }
 
 	    function register(config) {
-	        if (config.kits) {
+	        if (!config) {
+	            window.console.log('You must pass a config object to register the kit ' + name);
+	            return;
+	        }
+
+	        if (!isobject$1(config)) {
+	            window.console.log('\'config\' must be an object. You passed in a ' + typeof config);
+	            return;
+	        }
+
+	        if (isobject$1(config.kits)) {
+	            config.kits[name] = {
+	                constructor: constructor
+	            };
+	        } else {
+	            config.kits = {};
 	            config.kits[name] = {
 	                constructor: constructor
 	            };
 	        }
+	        window.console.log('Successfully registered ' + name + ' to your mParticle configuration');
 	    }
 
-	    if (!window || !window.mParticle || !window.mParticle.addForwarder) {
-	        return;
+	    if (window && window.mParticle && window.mParticle.addForwarder) {
+	        window.mParticle.addForwarder({
+	            name: name,
+	            constructor: constructor,
+	            getId: getId
+	        });
 	    }
 
-	    window.mParticle.addForwarder({
-	        name: name,
-	        constructor: constructor,
-	        getId: getId
-	    });
-
-	    module.exports = {
+	    var AppboyKitDev = {
 	        register: register
 	    };
-	})(window);
-	});
 	var AppboyKitDev_1 = AppboyKitDev.register;
 
 	exports.default = AppboyKitDev;
 	exports.register = AppboyKitDev_1;
 
-	Object.defineProperty(exports, '__esModule', { value: true });
+	return exports;
 
-}));
+}({}));
