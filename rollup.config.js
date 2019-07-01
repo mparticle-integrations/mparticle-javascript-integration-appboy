@@ -21,7 +21,7 @@ export default [
     {
         input: 'src/AppboyKit-dev.js',
         output: {
-            file: 'dist/AppboyKit.js',
+            file: 'dist/AppboyKit.iife.js',
             format: 'iife',
             exports: 'named',
             name: 'mpAppboyKit',
@@ -37,7 +37,7 @@ export default [
     {
         input: 'src/AppboyKit-dev.js',
         output: {
-            file: 'npm/AppboyKit.js',
+            file: 'dist/AppboyKit.common.js',
             format: 'cjs',
             exports: 'named',
             name: 'mpAppboyKit',

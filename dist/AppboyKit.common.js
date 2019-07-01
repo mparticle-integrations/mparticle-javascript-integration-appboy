@@ -8,10 +8,6 @@ function createCommonjsModule(fn, module) {
 	return module = { exports: {} }, fn(module, module.exports), module.exports;
 }
 
-function getCjsExportFromNamespace (n) {
-	return n && n['default'] || n;
-}
-
 var appboy_min = createCommonjsModule(function (module, exports) {
 /*
 * Braze Web SDK v2.2.4
@@ -272,12 +268,6 @@ aa=T=null!=ca?ca.apply():new T.constructor;else T=T[R[U]];ba+="."+R[U];}null!=T&
 function isObject(val) {
   return val != null && typeof val === 'object' && Array.isArray(val) === false;
 }
-
-var isobject = /*#__PURE__*/Object.freeze({
-	'default': isObject
-});
-
-var isobject$1 = getCjsExportFromNamespace(isobject);
 
 /* eslint-disable no-undef */
 window.appboy = appboy_min;
@@ -672,12 +662,12 @@ window.appboy = appboy_min;
             return;
         }
 
-        if (!isobject$1(config)) {
+        if (!isObject(config)) {
             window.console.log('\'config\' must be an object. You passed in a ' + typeof config);
             return;
         }
 
-        if (isobject$1(config.kits)) {
+        if (isObject(config.kits)) {
             config.kits[name] = {
                 constructor: constructor
             };
