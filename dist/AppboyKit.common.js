@@ -258,16 +258,15 @@ if("undefined"!==typeof appboyQueue&&appboyQueue&&appboyQueue.length&&0<appboyQu
 aa=T=null!=ca?ca.apply():new T.constructor;else T=T[R[U]];ba+="."+R[U];}null!=T&&"function"===typeof T&&T.apply(aa,O[P]);}}}}).call(window);
 });
 
-/*!
- * isobject <https://github.com/jonschlinkert/isobject>
- *
- * Copyright (c) 2014-2017, Jon Schlinkert.
- * Released under the MIT License.
- */
+var toString = {}.toString;
 
-function isObject(val) {
-  return val != null && typeof val === 'object' && Array.isArray(val) === false;
-}
+var isarray = Array.isArray || function (arr) {
+  return toString.call(arr) == '[object Array]';
+};
+
+var isobject = function isObject(val) {
+  return val != null && typeof val === 'object' && isarray(val) === false;
+};
 
 /* eslint-disable no-undef */
 window.appboy = appboy_min;
@@ -320,7 +319,15 @@ window.appboy = appboy_min;
             push_subscribe: 'setPushNotificationSubscriptionType',
             phone: 'setPhoneNumber',
             image_url: 'setAvatarImageUrl',
-            dob: 'setDateOfBirth'
+            dob: 'setDateOfBirth',
+            $LastName: 'setLastName',
+            $FirstName: 'setFirstName',
+            Email: 'setEmail',
+            $Gender: 'setGender',
+            $Country: 'setCountry',
+            $City: 'setHomeCity',
+            $Mobile: 'setPhoneNumber',
+            $Age: 'setDateOfBirth'
         };
 
         function logPurchaseEvent(event) {
@@ -359,12 +366,19 @@ window.appboy = appboy_min;
         }
 
         function setDefaultAttribute(key, value) {
-            if (key == 'dob') {
+            if (key === 'dob') {
                 if (!(value instanceof Date)) {
                     return 'Can\'t call removeUserAttribute or setUserAttribute on forwarder ' + name + ', removeUserAttribute or setUserAttribute must set \'dob\' to a date';
                 }
                 else {
                     appboy.getUser().setDateOfBirth(value.getFullYear(), value.getMonth() + 1, value.getDate());
+                }
+            } else if (key === '$Age') {
+                if (typeof value === 'number') {
+                    var year = (new Date).getFullYear() - value;
+                    appboy.getUser().setDateOfBirth(year, 1, 1);
+                } else {
+                    return '$Age must be a number';
                 }
             }
             else {
@@ -662,12 +676,12 @@ window.appboy = appboy_min;
             return;
         }
 
-        if (!isObject(config)) {
+        if (!isobject(config)) {
             window.console.log('\'config\' must be an object. You passed in a ' + typeof config);
             return;
         }
 
-        if (isObject(config.kits)) {
+        if (isobject(config.kits)) {
             config.kits[name] = {
                 constructor: constructor
             };
