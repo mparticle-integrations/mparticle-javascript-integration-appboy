@@ -8,6 +8,10 @@ function createCommonjsModule(fn, module) {
 	return module = { exports: {} }, fn(module, module.exports), module.exports;
 }
 
+function getCjsExportFromNamespace (n) {
+	return n && n['default'] || n;
+}
+
 var appboy_min = createCommonjsModule(function (module, exports) {
 /*
 * Braze Web SDK v2.2.4
@@ -258,15 +262,22 @@ if("undefined"!==typeof appboyQueue&&appboyQueue&&appboyQueue.length&&0<appboyQu
 aa=T=null!=ca?ca.apply():new T.constructor;else T=T[R[U]];ba+="."+R[U];}null!=T&&"function"===typeof T&&T.apply(aa,O[P]);}}}}).call(window);
 });
 
-var toString = {}.toString;
+/*!
+ * isobject <https://github.com/jonschlinkert/isobject>
+ *
+ * Copyright (c) 2014-2017, Jon Schlinkert.
+ * Released under the MIT License.
+ */
 
-var isarray = Array.isArray || function (arr) {
-  return toString.call(arr) == '[object Array]';
-};
+function isObject(val) {
+  return val != null && typeof val === 'object' && Array.isArray(val) === false;
+}
 
-var isobject = function isObject(val) {
-  return val != null && typeof val === 'object' && isarray(val) === false;
-};
+var isobject = /*#__PURE__*/Object.freeze({
+	'default': isObject
+});
+
+var isobject$1 = getCjsExportFromNamespace(isobject);
 
 /* eslint-disable no-undef */
 window.appboy = appboy_min;
@@ -309,6 +320,14 @@ window.appboy = appboy_min;
         self.name = name;
 
         var DefaultAttributeMethods = {
+            $LastName: 'setLastName',
+            $FirstName: 'setFirstName',
+            Email: 'setEmail',
+            $Gender: 'setGender',
+            $Country: 'setCountry',
+            $City: 'setHomeCity',
+            $Mobile: 'setPhoneNumber',
+            $Age: 'setDateOfBirth',
             last_name: 'setLastName',
             first_name: 'setFirstName',
             email: 'setEmail',
@@ -319,15 +338,7 @@ window.appboy = appboy_min;
             push_subscribe: 'setPushNotificationSubscriptionType',
             phone: 'setPhoneNumber',
             image_url: 'setAvatarImageUrl',
-            dob: 'setDateOfBirth',
-            $LastName: 'setLastName',
-            $FirstName: 'setFirstName',
-            Email: 'setEmail',
-            $Gender: 'setGender',
-            $Country: 'setCountry',
-            $City: 'setHomeCity',
-            $Mobile: 'setPhoneNumber',
-            $Age: 'setDateOfBirth'
+            dob: 'setDateOfBirth'
         };
 
         function logPurchaseEvent(event) {
@@ -676,12 +687,12 @@ window.appboy = appboy_min;
             return;
         }
 
-        if (!isobject(config)) {
+        if (!isobject$1(config)) {
             window.console.log('\'config\' must be an object. You passed in a ' + typeof config);
             return;
         }
 
-        if (isobject(config.kits)) {
+        if (isobject$1(config.kits)) {
             config.kits[name] = {
                 constructor: constructor
             };
