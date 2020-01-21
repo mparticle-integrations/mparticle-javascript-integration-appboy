@@ -458,6 +458,61 @@ describe('Appboy Forwarder', function () {
         reportService.event.should.have.property('EventName', 'Test Log Page View');
     });
 
+    it('should log a page view with the page name if sendEventNameForPageView is true', function(){
+        mParticle.forwarder.init(
+            {
+                apiKey: '123456',
+                forwardScreenViews: 'True',
+                sendEventNameForPageView: 'True'
+            },
+            reportService.cb,
+            true,
+            null
+        );
+
+        mParticle.forwarder.process({
+            EventName: 'Test Log Page View',
+            EventDataType: MessageType.PageView,
+            EventCategory: EventType.Navigation,
+            EventAttributes: { $$$attri$bute: '$$$$what$ever' }
+        });
+
+        window.appboy.should.have.property('logCustomEventCalled', true);
+        window.appboy.should.have.property('logCustomEventName', 'Test Log Page View');
+        window.appboy.eventProperties[0].should.have.property('hostname', window.location.hostname);
+        window.appboy.eventProperties[0].should.have.property('title', 'Mocha Tests');
+        window.appboy.eventProperties[0].should.have.property('attri$bute', 'what$ever');
+        reportService.event.should.have.property('EventName', 'Test Log Page View');
+
+        mParticle.forwarder.init(
+            {
+                apiKey: '123456',
+                forwardScreenViews: 'True',
+                sendEventNameForPageView: 'False'
+            },
+            reportService.cb,
+            true,
+            null
+        );
+
+        mParticle.forwarder.process({
+            EventName: 'Test Log Page View',
+            EventDataType: MessageType.PageView,
+            EventCategory: EventType.Navigation,
+            EventAttributes: { $$$attri$bute: '$$$$what$ever' }
+        });
+
+        window.appboy.should.have.property('logCustomEventCalled', true);
+
+        window.appboy.logCustomEventName.includes('Test Log Page View').should.equal(false);
+        //when sendEventNameForPageView is false, logCustomEventName is the path, which will include several /'s
+        window.appboy.logCustomEventName.includes('/').should.equal(true);
+        window.appboy.eventProperties[0].should.have.property('hostname', window.location.hostname);
+        window.appboy.eventProperties[0].should.have.property('title', 'Mocha Tests');
+        window.appboy.eventProperties[0].should.have.property('attri$bute', 'what$ever');
+        reportService.event.should.have.property('EventName', 'Test Log Page View');
+    });
+
     it('should sanitize purchase event and properties', function(){
         mParticle.forwarder.process({
             EventName: 'Test Purchase Event',
@@ -604,7 +659,7 @@ describe('Appboy Forwarder', function () {
         window.appboy.getUser().firstName.should.equal('Jane');
         window.appboy.getUser().lastName.should.equal('Smith');
         window.appboy.getUser().emailSet.should.equal('test2@gmail.com');
-        window.appboy.getUser().yearOfBirth.should.equal(2009);
+        window.appboy.getUser().yearOfBirth.should.equal(2010);
         window.appboy.getUser().dayOfBirth.should.equal(1);
         window.appboy.getUser().monthOfBirth.should.equal(1);
         window.appboy.getUser().phoneSet.should.equal('1234567890');
