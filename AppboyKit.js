@@ -343,12 +343,18 @@ var mpAppboyKit = (function (exports) {
 	        function logAppboyPageViewEvent(event) {
 	            var sanitizedEventName,
 	                sanitizedAttrs,
+	                eventName,
 	                attrs = event.EventAttributes || {};
 
 	            attrs.hostname = window.location.hostname;
 	            attrs.title = window.document.title;
 
-	            sanitizedEventName = getSanitizedValueForAppboy(window.location.pathname);
+	            if (forwarderSettings.setEventNameForPageView === 'True') {
+	                eventName = event.EventName;
+	            } else {
+	                eventName = window.location.pathname;
+	            }
+	            sanitizedEventName = getSanitizedValueForAppboy(eventName);
 	            sanitizedAttrs = getSanitizedCustomProperties(attrs);
 	            var reportEvent = appboy.logCustomEvent(sanitizedEventName, sanitizedAttrs);
 	            return reportEvent === true;
