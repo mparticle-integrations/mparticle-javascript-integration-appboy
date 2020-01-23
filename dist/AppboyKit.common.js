@@ -276,7 +276,7 @@ window.appboy = appboy_min;
 
     var name = 'Appboy',
         moduleId = 28,
-        version = '2.0.1',
+        version = '2.0.2',
         MessageType = {
             PageView: 3,
             PageEvent: 4,
