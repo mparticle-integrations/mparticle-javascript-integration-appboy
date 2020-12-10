@@ -994,10 +994,7 @@ describe('Appboy Forwarder', function() {
             'My App'
         );
 
-        window.appboy.should.have.property(
-            'baseUrl',
-            'https://sdk.fra-01.braze.eu'
-        );
+        window.appboy.should.have.property('baseUrl', 'sdk.fra-01.braze.eu');
     });
 
     it('should use the 01 clusterMapping url when 01 number is passed to cluster', function() {
@@ -1025,7 +1022,7 @@ describe('Appboy Forwarder', function() {
             'My App'
         );
 
-        window.appboy.baseUrl.should.equal('https://sdk.iad-01.braze.com');
+        window.appboy.baseUrl.should.equal('sdk.iad-01.braze.com');
     });
 
     it('should use the 02 clusterMapping url when 02 number is passed to cluster', function() {
@@ -1053,7 +1050,7 @@ describe('Appboy Forwarder', function() {
             'My App'
         );
 
-        window.appboy.baseUrl.should.equal('https://sdk.iad-02.braze.com');
+        window.appboy.baseUrl.should.equal('sdk.iad-02.braze.com');
     });
 
     it('should use the 03 clusterMapping url when 03 number is passed to cluster', function() {
@@ -1081,7 +1078,7 @@ describe('Appboy Forwarder', function() {
             'My App'
         );
 
-        window.appboy.baseUrl.should.equal('https://sdk.iad-03.braze.com');
+        window.appboy.baseUrl.should.equal('sdk.iad-03.braze.com');
     });
 
     it('should use the 04 clusterMapping url when 04 number is passed to cluster', function() {
@@ -1108,7 +1105,7 @@ describe('Appboy Forwarder', function() {
             'My App'
         );
 
-        window.appboy.baseUrl.should.equal('https://sdk.iad-04.braze.com');
+        window.appboy.baseUrl.should.equal('sdk.iad-04.braze.com');
     });
 
     it('should use the 06 clusterMapping url when 06 number is passed to cluster', function() {
@@ -1135,7 +1132,7 @@ describe('Appboy Forwarder', function() {
             'My App'
         );
 
-        window.appboy.baseUrl.should.equal('https://sdk.iad-06.braze.com');
+        window.appboy.baseUrl.should.equal('sdk.iad-06.braze.com');
     });
 
     it('should use the 08 clusterMapping url when 08 number is passed to cluster', function() {
@@ -1162,7 +1159,7 @@ describe('Appboy Forwarder', function() {
             'My App'
         );
 
-        window.appboy.baseUrl.should.equal('https://sdk.iad-08.braze.com');
+        window.appboy.baseUrl.should.equal('sdk.iad-08.braze.com');
     });
 
     it('should use custom cluster url when passed cluster JSON', function() {
