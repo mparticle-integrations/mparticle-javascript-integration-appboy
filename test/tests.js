@@ -180,17 +180,16 @@ describe('Appboy Forwarder', function() {
                 return true;
             };
 
-            this.openSession = function(func) {
+            this.openSession = function() {
                 self.openSessionCalled = true;
-                func();
             };
 
             this.changeUser = function(id) {
                 self.userId = id;
             };
 
-            this.subscribeToNewInAppMessages = function() {
-                self.subscribeToNewInAppMessagesCalled = true;
+            this.subscribeToInAppMessage = function() {
+                self.subscribeToInAppMessageBoolean = true;
             };
 
             this.getUser = function() {
@@ -286,7 +285,7 @@ describe('Appboy Forwarder', function() {
         window.appboy.should.have.property('initializeCalled', true);
         window.appboy.should.have.property('openSessionCalled', true);
         window.appboy.should.have.property(
-            'subscribeToNewInAppMessagesCalled',
+            'subscribeToInAppMessageBoolean',
             true
         );
         window.appboy.display.should.have.property(
@@ -818,7 +817,7 @@ describe('Appboy Forwarder', function() {
         window.appboy.getUser().firstName.should.equal('Jane');
         window.appboy.getUser().lastName.should.equal('Smith');
         window.appboy.getUser().emailSet.should.equal('test2@gmail.com');
-        window.appboy.getUser().yearOfBirth.should.equal(2010);
+        window.appboy.getUser().yearOfBirth.should.equal(2011);
         window.appboy.getUser().dayOfBirth.should.equal(1);
         window.appboy.getUser().monthOfBirth.should.equal(1);
         window.appboy.getUser().phoneSet.should.equal('1234567890');

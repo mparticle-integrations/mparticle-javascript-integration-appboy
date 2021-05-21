@@ -310,61 +310,47 @@ var constructor = function() {
     }
 
     function primeAppBoyWebPush() {
-        appboy.subscribeToNewInAppMessages(function(inAppMessages) {
-            var message = inAppMessages[0];
-            var pushPrimer = false;
-            if (message != null) {
-                var shouldDisplay = true;
+        appboy.subscribeToInAppMessage(function(inAppMessage) {
+            var shouldDisplay = true;
 
-                if (message instanceof appboy.ab.InAppMessage) {
-                    // Read the key-value pair for msg-id
-                    var msgId = message.extras['msg-id'];
+            if (inAppMessage instanceof appboy.InAppMessage) {
+                // Read the key-value pair for msg-id
+                var msgId = inAppMessage.extras['msg-id'];
 
-                    // If this is our push primer message
-                    if (msgId == 'push-primer') {
-                        pushPrimer = true;
-                        // We don't want to display the soft push prompt to users on browsers that don't support push, or if the user
-                        // has already granted/blocked permission
-                        if (
-                            !appboy.isPushSupported() ||
-                            appboy.isPushPermissionGranted() ||
-                            appboy.isPushBlocked()
-                        ) {
-                            shouldDisplay = false;
-                        }
-                        if (message.buttons[0] != null) {
-                            // Prompt the user when the first button is clicked
-                            message.buttons[0].subscribeToClickedEvent(
-                                function() {
-                                    appboy.registerAppboyPushMessages();
-                                }
-                            );
-                        }
+                // If this is our push primer message
+                if (msgId == 'push-primer') {
+                    // We don't want to display the soft push prompt to users on browsers that don't support push, or if the user
+                    // has already granted/blocked permission
+                    if (
+                        !appboy.isPushSupported() ||
+                        appboy.isPushPermissionGranted() ||
+                        appboy.isPushBlocked()
+                    ) {
+                        shouldDisplay = false;
                     }
-                }
-
-                // Display the message if it's a push primer message and shouldDisplay is true
-                if (
-                    (pushPrimer && shouldDisplay) ||
-                    (!pushPrimer && forwarderSettings.register_inapp === 'True')
-                ) {
-                    appboy.display.showInAppMessage(message);
+                    if (inAppMessage.buttons[0] != null) {
+                        // Prompt the user when the first button is clicked
+                        inAppMessage.buttons[0].subscribeToClickedEvent(
+                            function() {
+                                appboy.registerAppboyPushMessages();
+                            }
+                        );
+                    }
                 }
             }
 
-            // Remove this message from the array of IAMs and return whatever's left
-            return inAppMessages.slice(1);
+            // Display the message
+            if (shouldDisplay) {
+                appboy.display.showInAppMessage(inAppMessage);
+            }
         });
     }
 
     function openSession(forwarderSettings) {
-        appboy.openSession(function() {
-            if (forwarderSettings.softPushCustomEventName) {
-                appboy.logCustomEvent(
-                    forwarderSettings.softPushCustomEventName
-                );
-            }
-        });
+        appboy.openSession();
+        if (forwarderSettings.softPushCustomEventName) {
+            appboy.logCustomEvent(forwarderSettings.softPushCustomEventName);
+        }
     }
 
     function initForwarder(
@@ -414,15 +400,14 @@ var constructor = function() {
             }
 
             if (testMode !== true) {
-                /* eslint-disable */
                 appboy.initialize(forwarderSettings.apiKey, options);
-
+                // appboy.display.automaticallyShowNewInAppMessages();
                 primeAppBoyWebPush();
                 openSession(forwarderSettings);
-
-                /* eslint-enable */
             } else {
-                if (!appboy.initialize(forwarderSettings.apiKey, options)) {
+                if (
+                    !window.appboy.initialize(forwarderSettings.apiKey, options)
+                ) {
                     return 'Failed to initialize: ' + name;
                 }
 
