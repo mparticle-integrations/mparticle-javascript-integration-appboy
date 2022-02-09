@@ -818,7 +818,7 @@ describe('Appboy Forwarder', function() {
         window.appboy.getUser().firstName.should.equal('Jane');
         window.appboy.getUser().lastName.should.equal('Smith');
         window.appboy.getUser().emailSet.should.equal('test2@gmail.com');
-        window.appboy.getUser().yearOfBirth.should.equal(2011);
+        window.appboy.getUser().yearOfBirth.should.equal(2012);
         window.appboy.getUser().dayOfBirth.should.equal(1);
         window.appboy.getUser().monthOfBirth.should.equal(1);
         window.appboy.getUser().phoneSet.should.equal('1234567890');
@@ -914,32 +914,44 @@ describe('Appboy Forwarder', function() {
     });
 
     it('should not set baseUrl when passed an invalid cluster', function() {
-        reportService.reset();
-        window.appboy = new MockAppboy();
+                                                                               reportService.reset();
+                                                                               window.appboy = new MockAppboy();
 
-        mParticle.forwarder.init(
-            {
-                apiKey: '123456',
-                cluster: '05',
-            },
-            reportService.cb,
-            true,
-            null,
-            {
-                gender: 'm',
-            },
-            [
-                {
-                    Identity: 'testUser',
-                    Type: IdentityType.CustomerId,
-                },
-            ],
-            '1.1',
-            'My App'
-        );
+                                                                               mParticle.forwarder.init(
+                                                                                   {
+                                                                                       apiKey:
+                                                                                           '123456',
+                                                                                       cluster:
+                                                                                           '0',
+                                                                                   },
+                                                                                   reportService.cb,
+                                                                                   true,
+                                                                                   null,
+                                                                                   {
+                                                                                       gender:
+                                                                                           'm',
+                                                                                   },
+                                                                                   [
+                                                                                       {
+                                                                                           Identity:
+                                                                                               'testUser',
+                                                                                           Type:
+                                                                                               IdentityType.CustomerId,
+                                                                                       },
+                                                                                   ],
+                                                                                   '1.1',
+                                                                                   'My App'
+                                                                               );
 
-        (window.appboy.baseUrl === null).should.equal(true);
-    });
+                                                                               (
+                                                                                   window
+                                                                                       .appboy
+                                                                                       .baseUrl ===
+                                                                                   null
+                                                                               ).should.equal(
+                                                                                   true
+                                                                               );
+                                                                           });
 
     it('should have no baseUrl when cluster is not passed and dataCenterLocation is not EU', function() {
         reportService.reset();
