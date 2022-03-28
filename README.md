@@ -2,7 +2,7 @@
 
 ⚠️⚠️⚠️
 # Notice! Timeline for Breaking Changes for mParticle Web Braze Kit- 3/28/2022 - 6/8/2022
-This repository renames and replaces our [mParticle Appboy Web Kit](https://github.com/mparticle-integrations/mparticle-javascript-integration-appboy), which will be archived in the future.
+This repository will be replaced by our updated [mParticle Braze Web Kit](https://github.com/mparticle-integrations/mparticle-javascript-integration-braze) on June 8, 2022. This repo will be archived shortly after.
 
 Braze has breaking changes between version 2.5.2 and 3.5.0 of their SDK.  As a result, we too are updating our [mParticle Braze web kit](https://github.com/mparticle-integrations/mparticle-javascript-integration-appboy) to support Braze’s Web SDK version 3.5.0.  The updated mParticle Braze Web kit will be available via CDN on June 8, 2022 and is currently available on NPM as [@mparticle/web-braze-kit](https://www.npmjs.com/package/@mparticle/web-braze-kit) v3.0.0.
 
