@@ -379,6 +379,9 @@ var constructor = function() {
         appVersion,
         appName
     ) {
+        console.warn(
+            'mParticle is upgrading the Braze web kit that you are currently using on 6/8/2022.  You will automatically receive this update if implementing mParticle via snippet/CDN.  There may be breaking changes if you invoke deprecated Braze SDK methods. Please see https://docs.mparticle.com/integrations/braze/event for more information.'
+        );
         // eslint-disable-line no-unused-vars
         try {
             forwarderSettings = settings;
