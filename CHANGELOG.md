@@ -2,6 +2,11 @@
 
 --
 
+#### 2.0.8 - 2022-03-30
+
+-   Add logging to alert developers of upcoming Braze breaking changes
+
+⚠️⚠️⚠️ mParticle is upgrading the Braze web kit on 6/8/2022.  You will automatically receive this update if implementing mParticle via snippet/CDN.  There may be breaking changes if you invoke deprecated Braze SDK methods. Please see our [README](https://github.com/mparticle-integrations/mparticle-javascript-integration-appboy#readme) or [docs](https://docs.mparticle.com/integrations/braze/event) for more info  for more information.
 #### 2.0.7 - 2022-02-09
 
 -   Feat - add new Braze clusters
