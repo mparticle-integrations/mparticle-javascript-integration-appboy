@@ -2,6 +2,11 @@
 
 --
 
+#### 2.0.9 - 2022-04-07
+
+-   Revert to Appboy 2.5.2
+-   See 2.0.8 update below for upcoming important changes
+
 #### 2.0.8 - 2022-03-30
 
 -   Add logging to alert developers of upcoming Braze breaking changes
