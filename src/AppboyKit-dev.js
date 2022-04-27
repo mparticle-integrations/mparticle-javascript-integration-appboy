@@ -416,6 +416,11 @@ var constructor = function() {
                 if (customUrl) {
                     options.baseUrl = customUrl;
                 }
+            } 
+            
+            if (forwarderSettings.contentSecurityNonce) {
+                options.contentSecurityNonce =
+                    forwarderSettings.contentSecurityNonce;
             }
 
             if (testMode !== true) {
