@@ -421,9 +421,9 @@ var constructor = function() {
                 }
             }
 
-            if (mpCustomFlags && mpCustomFlags[moduleId]) {
-                var brazeFlags = mpCustomFlags[moduleId];
-                if (typeof brazeFlags.initOptions == 'function') {
+            if (mpCustomFlags && mpCustomFlags[moduleId.toString()]) {
+                var brazeFlags = mpCustomFlags[moduleId.toString()];
+                if (typeof brazeFlags.initOptions === 'function') {
                     brazeFlags.initOptions(options)
                 }
             }
