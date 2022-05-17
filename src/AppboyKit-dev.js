@@ -423,11 +423,12 @@ var constructor = function() {
 
             if (mpCustomFlags && mpCustomFlags[moduleId.toString()]) {
                 var brazeFlags = mpCustomFlags[moduleId.toString()];
+
                 if (typeof brazeFlags.initOptions === 'function') {
-                    brazeFlags.initOptions(options)
+                    brazeFlags.initOptions(options);
                 }
             }
-            
+
             if (testMode !== true) {
                 /* eslint-disable */
                 appboy.initialize(forwarderSettings.apiKey, options);
