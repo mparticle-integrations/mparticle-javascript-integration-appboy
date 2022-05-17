@@ -39,7 +39,8 @@ var constructor = function() {
     var self = this,
         forwarderSettings,
         options = {},
-        reportingService;
+        reportingService,
+        mpCustomFlags;
 
     self.name = name;
 
@@ -377,12 +378,14 @@ var constructor = function() {
         userAttributes,
         userIdentities,
         appVersion,
-        appName
+        appName,
+        customFlags
     ) {
         console.warn(
             'mParticle is upgrading the Braze web kit that you are currently using on 6/8/2022.  You will automatically receive this update if implementing mParticle via snippet/CDN.  There may be breaking changes if you invoke deprecated Braze SDK methods. Please see https://docs.mparticle.com/integrations/braze/event for more information.'
         );
         // eslint-disable-line no-unused-vars
+        mpCustomFlags = customFlags;
         try {
             forwarderSettings = settings;
             reportingService = service;
@@ -415,6 +418,14 @@ var constructor = function() {
                 var customUrl = decodeClusterSetting(cluster);
                 if (customUrl) {
                     options.baseUrl = customUrl;
+                }
+            }
+
+            if (mpCustomFlags && mpCustomFlags[moduleId.toString()]) {
+                var brazeFlags = mpCustomFlags[moduleId.toString()];
+
+                if (typeof brazeFlags.initOptions === 'function') {
+                    brazeFlags.initOptions(options);
                 }
             }
 
