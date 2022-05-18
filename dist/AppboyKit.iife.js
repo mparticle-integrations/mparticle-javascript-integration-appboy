@@ -280,7 +280,7 @@ var mpAppboyKit = (function (exports) {
 
 	var name = 'Appboy',
 	    moduleId = 28,
-	    version = '2.0.8',
+	    version = '2.0.10',
 	    MessageType = {
 	        PageView: 3,
 	        PageEvent: 4,
@@ -303,7 +303,8 @@ var mpAppboyKit = (function (exports) {
 	    var self = this,
 	        forwarderSettings,
 	        options = {},
-	        reportingService;
+	        reportingService,
+	        mpCustomFlags;
 
 	    self.name = name;
 
@@ -641,12 +642,14 @@ var mpAppboyKit = (function (exports) {
 	        userAttributes,
 	        userIdentities,
 	        appVersion,
-	        appName
+	        appName,
+	        customFlags
 	    ) {
 	        console.warn(
 	            'mParticle is upgrading the Braze web kit that you are currently using on 6/8/2022.  You will automatically receive this update if implementing mParticle via snippet/CDN.  There may be breaking changes if you invoke deprecated Braze SDK methods. Please see https://docs.mparticle.com/integrations/braze/event for more information.'
 	        );
 	        // eslint-disable-line no-unused-vars
+	        mpCustomFlags = customFlags;
 	        try {
 	            forwarderSettings = settings;
 	            reportingService = service;
@@ -679,6 +682,14 @@ var mpAppboyKit = (function (exports) {
 	                var customUrl = decodeClusterSetting(cluster);
 	                if (customUrl) {
 	                    options.baseUrl = customUrl;
+	                }
+	            }
+
+	            if (mpCustomFlags && mpCustomFlags[moduleId.toString()]) {
+	                var brazeFlags = mpCustomFlags[moduleId.toString()];
+
+	                if (typeof brazeFlags.initOptions === 'function') {
+	                    brazeFlags.initOptions(options);
 	                }
 	            }
 

@@ -2,6 +2,10 @@
 
 --
 
+#### 2.0.10 - 2022-05-18
+
+-   consume initOptions customFlags - this allows a customer to pass a callback to include additional options that mParticle doesn't support in the UI
+
 #### 2.0.9 - 2022-04-07
 
 -   Revert to Appboy 2.5.2
