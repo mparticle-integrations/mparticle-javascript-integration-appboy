@@ -2,6 +2,10 @@
 
 --
 
+#### 2.0.11 - 2022-06-07
+
+-   update go live date for Braze breaking changes from 6/8/2022 to 6/14/2022
+   
 #### 2.0.10 - 2022-05-18
 
 -   consume initOptions customFlags - this allows a customer to pass a callback to include additional options that mParticle doesn't support in the UI
