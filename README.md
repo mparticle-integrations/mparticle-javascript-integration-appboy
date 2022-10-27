@@ -1,3 +1,8 @@
+#Deprecated
+
+The mParticle Appboy web kit has been deprecated. Please use the (mParticle Braze web kit)[https://github.com/mparticle-integrations/mparticle-javascript-integration-braze].  Breaking changes between the two version can be found on [our docs page]([url](https://docs.mparticle.com/integrations/braze/event/)).
+
+
 ![Braze Logo](https://github.com/mparticle-integrations/mparticle-javascript-integration-appboy/blob/master/braze-logo.png)
 
 ⚠️⚠️⚠️
